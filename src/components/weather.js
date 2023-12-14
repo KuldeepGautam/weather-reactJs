@@ -6,6 +6,9 @@ const Weather = () => {
     "https://api.openweathermap.org/data/2.5/weather?q=Delhi&units=matric";
   const apiKey = "127185325ff40a51c11478288acf6895";
   const [weathers, setWeathers] = useState({});
+  const [count, setCount] = useState(
+    parseInt(localStorage.getItem("count")) || 0
+  );
 
   const fetchWeathers = () => {
     axios.get(apiUrl + `&appid=${apiKey}`).then((response) => {
@@ -16,20 +19,29 @@ const Weather = () => {
 
   useEffect(() => {
     fetchWeathers();
-  }, []);
+    const storedData = localStorage.setItem("count", count);
+    if (storedData) {
+      setCount(storedData);
+    }
+    // localStorage.setItem("counter", counter.toString());
+  }, [count]);
 
   return (
     <div>
       <h2>Weather</h2>
+      <span>{count}</span>
+      <button
+        onClick={() => {
+          setCount(count + 1);
+        }}
+        type="button"
+      >
+        +
+      </button>
       <div>
-        {/* <ul>
-          {weathers.map((web) => (
-            <li key={web}>{web.name}</li>
-          ))}
-        </ul> */}
         <p>{weathers.name}</p>
         <p>
-          Wind: Direction - {weathers.wind?.deg}, Speed - {weathers.wind?.speed}{" "}
+          Wind: Direction - {weathers.wind?.deg}, Speed - {weathers.wind?.speed}
           km/h
         </p>
       </div>
